@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+
+# FastAPI
+*.db
+
+# Node / React
+node_modules/
+dist/
+build/
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+
+# Editor
+.vscode/
+.idea/

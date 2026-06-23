@@ -1,5 +1,6 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from app.auth.routes import router as auth_router
 
 app = FastAPI()
 
@@ -23,3 +24,5 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         data = await websocket.receive_text()
         await websocket.send_text(f"You said: {data}")
+
+app.include_router(auth_router)

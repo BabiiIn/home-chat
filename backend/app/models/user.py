@@ -1,13 +1,12 @@
-from pydantic import BaseModel
-from typing import Optional
+from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
+from app.database import Base
 
-# Это временная модель (in-memory), пока мы не подключили PostgreSQL.
-# Позже мы заменим её на настоящую ORM-модель.
+class User(Base):
+    __tablename__ = "users"
 
-class User(BaseModel):
-    id: int
-    email: str
-    name: str
-    password_hash: str
-    created_at: datetime
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    name = Column(String, nullable=False)
+    password_hash = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)

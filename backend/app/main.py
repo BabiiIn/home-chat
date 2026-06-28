@@ -1,6 +1,7 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from app.auth.routes import router as auth_router
+from app.websocket.routes import router as websocket_router
 
 app = FastAPI()
 
@@ -17,12 +18,13 @@ app.add_middleware(
 def root():
     return {"message": "HC backend is running"}
 
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    await websocket.send_text("Connected to HC WebSocket")
-    while True:
-        data = await websocket.receive_text()
-        await websocket.send_text(f"You said: {data}")
+# @app.websocket("/ws")
+# async def websocket_endpoint(websocket: WebSocket):
+#     await websocket.accept()
+#     await websocket.send_text("Connected to HC WebSocket")
+#     while True:
+#         data = await websocket.receive_text()
+#         await websocket.send_text(f"You said: {data}")
 
 app.include_router(auth_router)
+app.include_router(websocket_router)

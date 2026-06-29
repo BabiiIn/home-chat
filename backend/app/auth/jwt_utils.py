@@ -1,7 +1,11 @@
 from jose import jwt, JWTError
 from fastapi import HTTPException, status
+import os
+from dotenv import load_dotenv
 
-SECRET_KEY = "supersecretkey"
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
 def verify_token(token: str):

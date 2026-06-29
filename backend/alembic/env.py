@@ -6,6 +6,11 @@ from sqlalchemy import pool
 from alembic import context
 from app.database import Base
 from app.models.user import User
+from app.models.message import Message
+
+from dotenv import load_dotenv
+import os
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -16,6 +21,9 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+load_dotenv()
+
+config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel

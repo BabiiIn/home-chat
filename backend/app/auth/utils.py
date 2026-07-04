@@ -1,9 +1,13 @@
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 import jwt
+import os
+from dotenv import load_dotenv
 
-# Настройки
-SECRET_KEY = "supersecretkey"  # позже вынесем в .env
+
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 1 день
 

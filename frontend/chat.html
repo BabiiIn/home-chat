@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Family Chat</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      #chat {
+        height: 80vh;
+        overflow-y: auto;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+      .msg {
+        margin-bottom: 8px;
+      }
+      .msg span.user {
+        font-weight: bold;
+        margin-right: 5px;
+      }
+      .msg img {
+        max-width: 200px;
+        display: block;
+        margin-top: 4px;
+      }
+      #controls {
+        padding: 10px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      #text {
+        flex: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chat"></div>
+
+    <div id="controls">
+      <input id="text" type="text" placeholder="Напиши сообщение..." />
+      <input id="file" type="file" accept="image/*" />
+      <button id="sendText">Отправить текст</button>
+      <button id="sendImage">Отправить картинку</button>
+    </div>
+
+    <script>
+      const token = "ВСТАВЬ_СЮДА_ТОКЕН_ПРИ_ТЕСТЕ";
+
+      const room = "family"; // твоя комната
+      const wsUrl = `ws://localhost:8000/ws/chat?token=${encodeURIComponent(token)}&room=${encodeURIComponent(room)}`;
+
+      const chatEl = document.getElementById("chat");
+      const textEl = document.getElementById("text");
+      const fileEl = document.getElementById("file");
+
+      const ws = new WebSocket(wsUrl);
+
+      ws.onopen = () => {
+        console.log("WS connected");
+      };
+
+      ws.onmessage = (event) => {
+        let data;
+        try {
+          data = JSON.parse(event.data);
+        } catch (e) {
+          console.log("Non-JSON message:", event.data);
+          return;
+        }
+
+        const div = document.createElement("div");
+        div.className = "msg";
+
+        const userSpan = document.createElement("span");
+        userSpan.className = "user";
+        userSpan.textContent = `user ${data.user_id}:`;
+        div.appendChild(userSpan);
+
+        if (data.type === "text") {
+          const textSpan = document.createElement("span");
+          textSpan.textContent = data.content;
+          div.appendChild(textSpan);
+        } else if (data.type === "image") {
+          const img = document.createElement("img");
+          // img.src = data.url; // сервер уже отдаёт /uploads/...
+          img.src = "http://localhost:8000" + data.url;
+
+          div.appendChild(img);
+        }
+
+        chatEl.appendChild(div);
+        chatEl.scrollTop = chatEl.scrollHeight;
+      };
+
+      ws.onerror = (e) => {
+        console.error("WS error", e);
+      };
+
+      ws.onclose = () => {
+        console.log("WS closed");
+      };
+
+      // отправка текста
+      document.getElementById("sendText").onclick = () => {
+        const content = textEl.value.trim();
+        if (!content) return;
+
+        const payload = {
+          type: "text",
+          content: content,
+        };
+
+        ws.send(JSON.stringify(payload));
+        textEl.value = "";
+      };
+
+      // отправка картинки
+      document.getElementById("sendImage").onclick = () => {
+        const file = fileEl.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = reader.result.split(",")[1]; // убираем префикс data:...
+
+          const payload = {
+            type: "image",
+            filename: file.name,
+            data: base64,
+          };
+
+          ws.send(JSON.stringify(payload));
+          fileEl.value = "";
+        };
+        reader.readAsDataURL(file);
+      };
+    </script>
+  </body>
+</html>

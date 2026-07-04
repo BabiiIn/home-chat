@@ -23,3 +23,6 @@ build/
 # Editor
 .vscode/
 .idea/
+
+.env
+app/uploads/

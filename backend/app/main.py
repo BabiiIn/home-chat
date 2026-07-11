@@ -23,3 +23,5 @@ app.include_router(auth_router)
 app.include_router(websocket_router)
 
 app.mount("/uploads", StaticFiles(directory="app/uploads"), name="uploads")
+
+app.mount("/static", StaticFiles(directory="app/static"), name="static")

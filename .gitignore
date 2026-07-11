@@ -9,10 +9,30 @@ venv/
 # FastAPI
 *.db
 
-# Node / React
+# Backend uploads
+backend/app/uploads/
+
+# Node / React (root-level)
 node_modules/
 dist/
 build/
+
+# Node / React (frontend project)
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+
+# Frontend environment files
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.production.local
+frontend/.env.test.local
+
+# Frontend logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
 
 # OS
 .DS_Store
@@ -24,5 +44,5 @@ build/
 .vscode/
 .idea/
 
+# Root env
 .env
-app/uploads/

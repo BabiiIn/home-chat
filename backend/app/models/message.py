@@ -10,7 +10,6 @@ class Message(Base):
     room = Column(String, index=True)
     content = Column(String)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
-
     message_type = Column(String, default="text")
     file_path = Column(String, nullable=True)
 

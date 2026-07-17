@@ -18,5 +18,14 @@ class RoomManager:
 
     async def broadcast(self, room: str, message: str):
         if room in self.rooms:
-            for ws in list(self.rooms[room]):
-                await ws.send_text(message)
+            for ws in list(self.rooms[room]):  # ← добавили list()
+                try:
+                    await ws.send_text(message)
+                except Exception:
+                    # WebSocket закрыт — удаляем его
+                    self.rooms[room].discard(ws)   # ← добавили
+
+            # Если комната пустая — удаляем
+            if not self.rooms[room]:
+                del self.rooms[room]               # ← добавили
+

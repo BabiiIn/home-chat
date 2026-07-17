@@ -8,8 +8,6 @@ from app.auth.utils import hash_password, verify_password, create_access_token
 from app.database import SessionLocal
 from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
-from app.auth.jwt import create_access_token
-from app.auth.passwords import hash_password,verify_password
 
 def get_db():
     db = SessionLocal()
